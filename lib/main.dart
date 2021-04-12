@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 除半透明状态栏
-    // if (Theme.of(context).platform == TargetPlatform.android) {
-    //   SystemUiOverlayStyle _style = SystemUiOverlayStyle(
-    //       statusBarColor: Colors.transparent,
-    //       statusBarIconBrightness: Brightness.dark);
-    //   SystemChrome.setSystemUIOverlayStyle(_style);
-    // }
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      SystemUiOverlayStyle _style = SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark);
+      SystemChrome.setSystemUIOverlayStyle(_style);
+    }
     return MaterialApp(
       // theme: ThemeData(primarySwatch: Colors.grey, primaryColor: Colors.white),
       home: MyHomePage(),

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wanwan/commponets/Toast.dart';
 import 'package:wanwan/commponets/app_bar.dart';
 import 'package:wanwan/commponets/line.dart';
 import 'package:wanwan/data/DataUtils.dart';
 import 'package:wanwan/model/circle_entity.dart';
 import 'package:wanwan/model/comment_entity.dart';
+import 'package:wanwan/ui/common/GalleryImagePreview.dart';
+import 'package:wanwan/utils/RouteUtil.dart';
 
 class CirclePage extends StatefulWidget {
   @override
@@ -82,9 +85,12 @@ class _CirclePageState extends State<CirclePage>
                 fontWeight: FontWeight.bold),
           ),
           TextSpan(
-              text: commentEntity.replyUsername != null?" 回复 ":"", style: TextStyle(fontSize: 12, color: Colors.grey)),
+              text: commentEntity.replyUsername != null ? " 回复 " : "",
+              style: TextStyle(fontSize: 12, color: Colors.grey)),
           TextSpan(
-              text: commentEntity.replyUsername != null?"${commentEntity.replyUsername}：":"",
+              text: commentEntity.replyUsername != null
+                  ? "${commentEntity.replyUsername}："
+                  : "",
               style: TextStyle(
                   fontSize: 12,
                   color: Colors.blueAccent,
@@ -127,7 +133,8 @@ class _CirclePageState extends State<CirclePage>
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(left: 10, top: 15, right: 10, bottom: 10),
+            padding:
+                const EdgeInsets.only(left: 10, top: 15, right: 10, bottom: 10),
             decoration: BoxDecoration(color: Colors.white),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,12 +207,21 @@ class _CirclePageState extends State<CirclePage>
                                       circleEntity.images == null
                                           ? 0
                                           : circleEntity.images.length,
-                                      (index) {
-                                        return Image.network(
-                                          circleEntity.images[index],
-                                          width: imgWidth,
-                                          height: imgWidth,
-                                          fit: BoxFit.cover,
+                                      (imgIndex) {
+                                        return InkWell(
+                                          onTap: () => RouteUtil.push(
+                                              context,
+                                              GalleryImagePreview(
+                                                galleryItems:
+                                                    list[index].images,
+                                                index: imgIndex,
+                                              )),
+                                          child: Image.network(
+                                            circleEntity.images[imgIndex],
+                                            width: imgWidth,
+                                            height: imgWidth,
+                                            fit: BoxFit.cover,
+                                          ),
                                         );
                                       },
                                     ),
