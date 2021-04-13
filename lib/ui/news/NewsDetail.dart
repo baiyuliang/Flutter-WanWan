@@ -9,6 +9,8 @@ import 'package:wanwan/net/Api.dart';
 import 'package:wanwan/net/ResultData.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
+import 'package:wanwan/ui/common/GalleryImagePreview.dart';
+import 'package:wanwan/utils/RouteUtil.dart';
 
 class NewsDetailPage extends StatefulWidget {
   NewsResultData data;
@@ -92,7 +94,13 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                         print("Opening $url...");
                       },
                       onImageTap: (src) {
-                        print(src);
+                        List<String> list = [];
+                        list.add(src);
+                        RouteUtil.push(
+                            context,
+                            GalleryImagePreview(
+                              galleryItems: list,
+                            ));
                       },
                       onImageError: (exception, stackTrace) {
                         print(exception);

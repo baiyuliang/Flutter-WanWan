@@ -7,6 +7,7 @@ import 'package:wanwan/data/DataUtils.dart';
 import 'package:wanwan/model/circle_entity.dart';
 import 'package:wanwan/model/comment_entity.dart';
 import 'package:wanwan/ui/common/GalleryImagePreview.dart';
+import 'package:wanwan/ui/common/VideoPlay.dart';
 import 'package:wanwan/utils/RouteUtil.dart';
 
 class CirclePage extends StatefulWidget {
@@ -16,6 +17,8 @@ class CirclePage extends StatefulWidget {
 
 class _CirclePageState extends State<CirclePage>
     with AutomaticKeepAliveClientMixin {
+  double videoWidth;
+  double imgWidth;
   int page = 1;
   ScrollController scrollController = ScrollController();
   List<CircleEntity> list = [];
@@ -32,6 +35,79 @@ class _CirclePageState extends State<CirclePage>
       if (page == 1) list.clear();
       list.addAll(datas);
     });
+  }
+
+  getMediaContent(index) {
+    CircleEntity circleEntity = list[index];
+    if (circleEntity.images != null && circleEntity.images.length > 0) {
+      return Container(
+        margin: const EdgeInsets.only(top: 10),
+        child: GridView.count(
+          //解决ListView嵌套GridView滑动冲突
+          physics: new NeverScrollableScrollPhysics(),
+          //解决GridView展示不出来的问题
+          shrinkWrap: true,
+          //水平子Widget之间间距
+          crossAxisSpacing: 10,
+          //垂直子Widget之间间距
+          mainAxisSpacing: 10,
+          //一行的Widget数量
+          crossAxisCount: 3,
+          //子Widget宽高比例
+          childAspectRatio: 1,
+          //子Widget列表
+          children: List.generate(
+            circleEntity.images == null ? 0 : circleEntity.images.length,
+            (imgIndex) {
+              return InkWell(
+                onTap: () => RouteUtil.push(
+                    context,
+                    GalleryImagePreview(
+                      galleryItems: list[index].images,
+                      index: imgIndex,
+                    )),
+                child: Image.network(
+                  circleEntity.images[imgIndex],
+                  width: imgWidth,
+                  height: imgWidth,
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    } else if (circleEntity.videoData != null) {
+      return InkWell(
+        onTap: () {
+          RouteUtil.push(
+              context,
+              VideoPlay(
+                videoData: circleEntity.videoData,
+              ));
+        },
+        child: Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.network(
+                circleEntity.videoData.coverImg,
+                width: videoWidth,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
+              Icon(
+                Icons.play_circle_outline,
+                size: 50,
+                color: Colors.white,
+              )
+            ],
+          ),
+        ),
+      );
+    }
+    return null;
   }
 
   getReplyItem(CommentEntity commentEntity) {
@@ -127,7 +203,6 @@ class _CirclePageState extends State<CirclePage>
   }
 
   getItem(index) {
-    double imgWidth = (MediaQuery.of(context).size.width - 60 - 30) / 3;
     CircleEntity circleEntity = list[index];
     return InkWell(
       child: Column(
@@ -158,6 +233,7 @@ class _CirclePageState extends State<CirclePage>
                       //姓名，时间
                       Container(
                         height: 40,
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,61 +251,12 @@ class _CirclePageState extends State<CirclePage>
                           ],
                         ),
                       ),
-                      //具体内容+图片
-                      Visibility(
-                          visible: circleEntity.images != null &&
-                              circleEntity.images.length > 0,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: Column(
-                              children: [
-                                Text(circleEntity.content,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color(0xFF333333))),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10),
-                                  child: GridView.count(
-                                    //解决ListView嵌套GridView滑动冲突
-                                    physics: new NeverScrollableScrollPhysics(),
-                                    //解决GridView展示不出来的问题
-                                    shrinkWrap: true,
-                                    //水平子Widget之间间距
-                                    crossAxisSpacing: 10,
-                                    //垂直子Widget之间间距
-                                    mainAxisSpacing: 10,
-                                    //一行的Widget数量
-                                    crossAxisCount: 3,
-                                    //子Widget宽高比例
-                                    childAspectRatio: 1,
-                                    //子Widget列表
-                                    children: List.generate(
-                                      circleEntity.images == null
-                                          ? 0
-                                          : circleEntity.images.length,
-                                      (imgIndex) {
-                                        return InkWell(
-                                          onTap: () => RouteUtil.push(
-                                              context,
-                                              GalleryImagePreview(
-                                                galleryItems:
-                                                    list[index].images,
-                                                index: imgIndex,
-                                              )),
-                                          child: Image.network(
-                                            circleEntity.images[imgIndex],
-                                            width: imgWidth,
-                                            height: imgWidth,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )),
+                      //具体内容
+                      Text(circleEntity.content,
+                          style: TextStyle(
+                              fontSize: 15, color: Color(0xFF333333))),
+                      //视频图片
+                      getMediaContent(index),
                       //评论
                       Container(
                         margin: const EdgeInsets.only(top: 10),
@@ -272,10 +299,16 @@ class _CirclePageState extends State<CirclePage>
 
   @override
   Widget build(BuildContext context) {
+    videoWidth = MediaQuery.of(context).size.width - 100;
+    imgWidth = (MediaQuery.of(context).size.width - 60 - 30) / 3;
     return Scaffold(
         appBar: MyAppBar(
           title: "圈子",
           hideBackArrow: true,
+          rightImgUrl: "images/icon_circle_pub.png",
+          funRightImg: () {
+            Toast.show("发布");
+          },
           showLine: true,
         ),
         body: ListView.builder(

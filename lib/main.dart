@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 import 'package:wanwan/ui/Home.dart';
 import 'package:wanwan/ui/Circle.dart';
 import 'package:wanwan/ui/Message.dart';
 import 'package:wanwan/ui/Mine.dart';
 
-void main() {
+main()  {
+  IjkConfig.isLog = true;
+   IjkManager.initIJKPlayer();
   runApp(MyApp());
 }
 

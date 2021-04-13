@@ -7,10 +7,16 @@ class CircleEntity {
   String date;
   String content;
   List<String> images;
+  VideoData videoData;
   int commentCounts;
   int praiseCounts;
   int collectCounts;
   bool isPraise;
   bool isCollect;
   List<CommentEntity> comments;
+}
+
+class VideoData{
+  String coverImg;
+  String videoUrl;
 }
