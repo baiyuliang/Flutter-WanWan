@@ -2,16 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
+import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
+import 'package:wanwan/net/Url.dart';
 import 'package:wanwan/ui/Home.dart';
 import 'package:wanwan/ui/Circle.dart';
 import 'package:wanwan/ui/Message.dart';
 import 'package:wanwan/ui/Mine.dart';
+import 'package:wanwan/ui/base/Const.dart';
+import 'package:wanwan/utils/LogUtil.dart';
+import 'package:wanwan/utils/ImUtil.dart';
+import 'package:wanwan/utils/Sp.dart';
 
-main()  {
-  IjkConfig.isLog = true;
-   IjkManager.initIJKPlayer();
-  runApp(MyApp());
-}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -39,12 +40,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController tabController;
-  final List<String> tab = ["首页",  "消息", "圈子", "我的"];
+  final List<String> tab = ["首页", "消息", "圈子", "我的"];
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: tab.length, vsync: this);
+    ImUtil.init();
+    SpUtils.get(IM_TOKEN).then((token) => ImUtil.connect(token));
+    ImUtil.addStatusChangeListener();
+    ImUtil.addReceiverListener();
   }
 
   @override
@@ -59,30 +64,22 @@ class _MyHomePageState extends State<MyHomePage>
               Tab(
                 icon: Icon(Icons.home),
                 iconMargin: const EdgeInsets.all(0),
-                child: Text(tab[0],style: TextStyle(
-                    fontSize: 12
-                )),
+                child: Text(tab[0], style: TextStyle(fontSize: 12)),
               ),
               Tab(
                 icon: Icon(Icons.message),
                 iconMargin: const EdgeInsets.all(0),
-                child: Text(tab[1],style: TextStyle(
-                    fontSize: 12
-                )),
+                child: Text(tab[1], style: TextStyle(fontSize: 12)),
               ),
               Tab(
                 icon: Icon(Icons.dynamic_feed),
                 iconMargin: const EdgeInsets.all(0),
-                child: Text(tab[2],style: TextStyle(
-                    fontSize: 12
-                )),
+                child: Text(tab[2], style: TextStyle(fontSize: 12)),
               ),
               Tab(
                 icon: Icon(Icons.person),
                 iconMargin: const EdgeInsets.all(0),
-                child: Text(tab[3],style: TextStyle(
-                  fontSize: 12
-                )),
+                child: Text(tab[3], style: TextStyle(fontSize: 12)),
               ),
             ],
             indicatorColor: Colors.white,

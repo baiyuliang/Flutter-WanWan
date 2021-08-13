@@ -1,8 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanwan/commponets/ItemView.dart';
+import 'package:wanwan/commponets/ShowDialog.dart';
 import 'package:wanwan/commponets/Toast.dart';
 import 'package:wanwan/commponets/app_bar.dart';
+import 'package:wanwan/db/db.dart';
+import 'package:wanwan/utils/ImUtil.dart';
+import 'package:wanwan/utils/RouteUtil.dart';
+import 'package:wanwan/utils/Sp.dart';
+
+import 'login/Login.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -11,9 +18,16 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage>
     with AutomaticKeepAliveClientMixin {
+  User user;
+
   @override
   void initState() {
     super.initState();
+    SpUtils.getUser().then((value) {
+      setState(() {
+        user = value;
+      });
+    });
   }
 
   @override
@@ -22,8 +36,8 @@ class _MinePageState extends State<MinePage>
       appBar: MyAppBar(
         title: "我的",
         hideBackArrow: true,
-        rightImgUrl:"images/icon_setting.png" ,
-        funRightImg: (){
+        rightImgUrl: "images/icon_setting.png",
+        funRightImg: () {
           Toast.show("设置");
         },
         showLine: true,
@@ -40,7 +54,9 @@ class _MinePageState extends State<MinePage>
                 children: [
                   ClipOval(
                     child: Image.network(
-                      "https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1409078852,3672898205&fm=26&gp=0.jpg",
+                      user != null
+                          ? user.avatar
+                          : "https://img2.baidu.com/it/u=3875436417,2934656235&fm=26&fmt=auto&gp=0.jpg",
                       width: 60,
                       height: 60,
                     ),
@@ -54,7 +70,7 @@ class _MinePageState extends State<MinePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "火舞",
+                          user != null ? user.nickname : "",
                           style: TextStyle(
                               color: Color(0xFF333333),
                               fontSize: 15,
@@ -77,8 +93,7 @@ class _MinePageState extends State<MinePage>
               )),
           ItemView(
             title: "我的动态",
-            icon: Icon(
-                Icons.dynamic_feed, size: 18, color: Colors.red),
+            icon: Icon(Icons.dynamic_feed, size: 18, color: Colors.red),
             marginTop: 15,
             onTap: () {
               Toast.show("我的订单");
@@ -109,6 +124,31 @@ class _MinePageState extends State<MinePage>
               Toast.show("客服中心");
             },
           ),
+          InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return ShowDialog(
+                      msg: "确定退出吗？",
+                      positiveText: "退出",
+                      positiveFun: () {
+                        ImUtil.disConnect();
+                        SpUtils.setUser(null);
+                        RouteUtil.pushAndRemoveUntil(context, Login());
+                      },
+                    );
+                  });
+            },
+            child: Container(
+              height: 45,
+              margin: const EdgeInsets.only(top: 50),
+              decoration: BoxDecoration(color: Colors.white),
+              alignment: Alignment.center,
+              child: Text("退出登录", style: TextStyle(color: Colors.redAccent)),
+            ),
+          )
         ],
       )),
     );

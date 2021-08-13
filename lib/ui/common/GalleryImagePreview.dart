@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:wanwan/utils/RouteUtil.dart';
 
+// ignore: must_be_immutable
 class GalleryImagePreview extends StatefulWidget {
   List<String> galleryItems;
   int index;
@@ -11,17 +13,17 @@ class GalleryImagePreview extends StatefulWidget {
   GalleryImagePreview({this.galleryItems, this.index}) : super();
 
   @override
-  State<StatefulWidget> createState() {
-    return MyGalleryImagePreview();
-  }
+  MyGalleryImagePreview createState() => MyGalleryImagePreview();
 }
 
 class MyGalleryImagePreview extends State<GalleryImagePreview> {
   PageController pageController;
+  int pageIndex;
 
   @override
   void initState() {
     super.initState();
+    pageIndex = widget.index;
     pageController = PageController(initialPage: widget.index);
   }
 
@@ -58,7 +60,11 @@ class MyGalleryImagePreview extends State<GalleryImagePreview> {
                 ),
                 // backgroundDecoration: widget.backgroundDecoration,
                 pageController: pageController,
-                // onPageChanged: onPageChanged,
+                onPageChanged: (index) {
+                  setState(() {
+                    pageIndex = index;
+                  });
+                },
               )),
         ),
         Container(
@@ -69,6 +75,17 @@ class MyGalleryImagePreview extends State<GalleryImagePreview> {
               Icons.arrow_back_ios,
               color: Colors.white,
             ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.bottomCenter,
+          margin: const EdgeInsets.only(bottom: 20),
+          child: Text(
+            "${pageIndex + 1}/${widget.galleryItems.length}",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                decoration: TextDecoration.none),
           ),
         )
       ],

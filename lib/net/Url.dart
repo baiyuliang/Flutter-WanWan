@@ -11,7 +11,14 @@ class Url {
 
   static const String IMAGES_LIST = "$BASE_URL_IMAGES?c=WallPaperAndroid&a=getAppsByCategory";
 
-  static const String IM_URL = "https://api.ai.qq.com/fcgi-bin/nlp/nlp_textchat";
-  static const String IM_APP_ID = "2113361363";
-  static const String IM_APP_KEY = "KUh2XEXWZTHw9nng";
+  static const String ROBOT_URL = "https://api.tianapi.com/txapi/robot/index?key=8461142e844b269785d25242986696c5&question=";
+
+
+  static const String RONG_IM_KEY = "lmxuhwagl6d2d";
+  //userId:111111
+  static const String RONG_IM_TOKEN1 = "sQeX6tAf51KztcpXvsCgsfqCETulG1ytpjribvgvFhc=@pout.cn.rongnav.com;pout.cn.rongcfg.com";
+  //userId:222222
+  static const String RONG_IM_TOKEN2 = "URL7U0VfIMZUJ48iyuGM7PqCETulG1ytxQsBFazurm8=@pout.cn.rongnav.com;pout.cn.rongcfg.com";
+
+  static const String AVATAR_ROBOT="https://img0.baidu.com/it/u=2954318185,3882868494&fm=26&fmt=auto&gp=0.jpg";
 }

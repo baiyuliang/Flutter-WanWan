@@ -25,8 +25,9 @@ abstract class BaseState<T> extends State<BaseStatefulWidget> {
   }
 
   dismissLoading() {
-    _dialogLoadingController?.dismissDialog();
-    _dialogLoadingController = null;
+    if (_dialogLoadingController != null) {
+      _dialogLoadingController.dismissDialog();
+      _dialogLoadingController = null;
+    }
   }
-
 }

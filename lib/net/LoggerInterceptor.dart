@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 
 ///日志拦截器
 class LoggerInterceptor extends Interceptor {
+
+
   @override
-  Future onRequest(RequestOptions options) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     String requestStr = "\n==================== REQUEST ====================\n"
         "- URL:\n${options.baseUrl + options.path}\n"
         "- METHOD: ${options.method}\n";
@@ -13,19 +15,18 @@ class LoggerInterceptor extends Interceptor {
         requestStr += "- BODY:\n${data.mapToStructureString()}\n";
       } else if (data is FormData) {
         final formDataMap = Map()
-          ..addEntries(data.fields)
-          ..addEntries(data.files);
+          ..addEntries(data.fields)..addEntries(data.files);
         requestStr += "- BODY:\n${formDataMap.mapToStructureString()}\n";
       } else {
         requestStr += "- BODY:\n${data.toString()}\n";
       }
     }
     print(requestStr);
-    return options;
+    handler.next(options);
   }
 
   @override
-  Future onError(DioError err) async {
+  void onError(DioError err, ErrorInterceptorHandler handler) {
     String errorStr = "\n==================== RESPONSE ====================\n";
     if (err.response != null && err.response.data != null) {
       print('╔ ${err.type.toString()}');
@@ -35,37 +36,37 @@ class LoggerInterceptor extends Interceptor {
       errorStr += "- MSG: ${err.message}\n";
     }
     print(errorStr);
-    return err;
+    handler.next(err);
   }
 
   @override
-  Future onResponse(Response response) async {
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
     String responseStr =
         "\n==================== RESPONSE ====================\n";
     if (response.data != null) {
       responseStr += "- BODY:\n ${_parseResponse(response)}";
     }
     printWrapped(responseStr);
-    return response;
+    handler.next(response);
   }
+}
 
-  void printWrapped(String text) {
-    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text).forEach((match) => print(match.group(0)));
-  }
+void printWrapped(String text) {
+  final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
+}
 
-  String _parseResponse(Response response) {
-    String responseStr = "";
-    var data = response.data;
-    if (data is Map)
-      responseStr += data.mapToStructureString();
-    else if (data is List)
-      responseStr += data.listToStructureString();
-    else
-      responseStr += response.data.toString();
+String _parseResponse(Response response) {
+  String responseStr = "";
+  var data = response.data;
+  if (data is Map)
+    responseStr += data.mapToStructureString();
+  else if (data is List)
+    responseStr += data.listToStructureString();
+  else
+    responseStr += response.data.toString();
 
-    return responseStr;
-  }
+  return responseStr;
 }
 
 extension Map2StringEx on Map {
@@ -80,7 +81,8 @@ extension Map2StringEx on Map {
           result += "\n$indentationStr" + "\"$key\" : $temp,";
         } else if (value is List) {
           result += "\n$indentationStr" +
-              "\"$key\" : ${value.listToStructureString(indentation: indentation + 2)},";
+              "\"$key\" : ${value.listToStructureString(
+                  indentation: indentation + 2)},";
         } else {
           result += "\n$indentationStr" + "\"$key\" : \"$value\",";
         }

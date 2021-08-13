@@ -13,7 +13,7 @@ import 'package:wanwan/ui/common/GalleryImagePreview.dart';
 import 'package:wanwan/utils/RouteUtil.dart';
 
 class NewsDetailPage extends StatefulWidget {
-  NewsResultData data;
+  final NewsResultData data;
 
   NewsDetailPage({this.data});
 
@@ -90,16 +90,15 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                             lineHeight: LineHeight.percent(130)),
                       },
                       customRender: {},
-                      onLinkTap: (url) {
-                        print("Opening $url...");
+                      onLinkTap: (url, _context, attrs, element) {
+                        Toast.show("Opening $url...");
                       },
-                      onImageTap: (src) {
-                        List<String> list = [];
-                        list.add(src);
+                      onImageTap: (src, _context, attrs, element) {
                         RouteUtil.push(
                             context,
                             GalleryImagePreview(
-                              galleryItems: list,
+                              galleryItems: [src],
+                              index: 0,
                             ));
                       },
                       onImageError: (exception, stackTrace) {

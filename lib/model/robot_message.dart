@@ -1,25 +1,26 @@
 import 'dart:convert';
 
 class RobotMessage {
-  int ret;
-  var msg;
+  int code;
+  String msg;
+  List newslist;
   RobotData data;
 
   RobotMessage(json) {
     var map = Map.from(json);
-    ret = map['ret'];
+    code = map['code'];
     msg = map['msg'];
-    var _data = map['data'];
-    data = RobotData(_data);
+    newslist = map['newslist'];
+    data = RobotData(newslist[0]);
   }
 }
 
 class RobotData {
-  var session;
-  String answer;
+  String datatype;
+  String reply;
 
   RobotData(data) {
-    session = data['session'];
-    answer = data['answer'];
+    datatype = data['datatype'];
+    reply = data['reply'];
   }
 }

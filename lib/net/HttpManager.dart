@@ -18,7 +18,7 @@ class HttpManager {
   HttpManager._internal({String baseUrl}) {
     if (null == _dio) {
       _dio = new Dio(
-          new BaseOptions(baseUrl: Url.BASE_URL, connectTimeout: 15000));
+          new BaseOptions(baseUrl: baseUrl??Url.BASE_URL, connectTimeout: 15000));
       _dio.interceptors.add(new LoggerInterceptor());
       _dio.interceptors.add(new ResponseInterceptor());
     }
