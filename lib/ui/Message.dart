@@ -41,7 +41,7 @@ class _MessagePageState extends State<MessagePage>
 
   void refreshConversations() {
     ImUtil.getConversation().then((list) {
-      if (list.isNotEmpty) {
+      if (list != null) {
         setState(() {
           conversationList.clear();
           //添加机器人
@@ -100,7 +100,9 @@ class _MessagePageState extends State<MessagePage>
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    isRobot(conversation) ? Url.AVATAR_ROBOT : conversation.avatar,
+                    isRobot(conversation)
+                        ? Url.AVATAR_ROBOT
+                        : conversation.avatar,
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
@@ -122,7 +124,7 @@ class _MessagePageState extends State<MessagePage>
                                   : conversation.nickname,
                             ),
                             Text(
-                              isRobot(conversation)?"":"刚刚",
+                              isRobot(conversation) ? "" : "刚刚",
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 12),
                             ),

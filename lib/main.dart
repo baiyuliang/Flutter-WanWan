@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
-import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
-import 'package:wanwan/net/Url.dart';
 import 'package:wanwan/ui/Home.dart';
 import 'package:wanwan/ui/Circle.dart';
 import 'package:wanwan/ui/Message.dart';
 import 'package:wanwan/ui/Mine.dart';
 import 'package:wanwan/ui/base/Const.dart';
-import 'package:wanwan/utils/LogUtil.dart';
 import 'package:wanwan/utils/ImUtil.dart';
 import 'package:wanwan/utils/Sp.dart';
 
+import 'Splash.dart';
+
+main() {
+  runApp(Splash());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

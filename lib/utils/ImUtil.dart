@@ -21,7 +21,6 @@ class ImUtil {
       "avatar": avatar
     };
     var result = await methodChannel.invokeMethod("register", params);
-    LogUtil.log("result>>$result");
     return result;
   }
 
@@ -103,10 +102,8 @@ class ImUtil {
   static sendText(String targetId, String content, User user) async {
     TextMessage txtMessage = new TextMessage();
     txtMessage.content = content;
-    txtMessage.extra =
-        User(nickname: user.nickname, avatar: user.avatar).toJsonString();
-    Message msg = await RongIMClient.sendMessage(
-        RCConversationType.Private, targetId, txtMessage);
+    txtMessage.extra =User(nickname: user.nickname, avatar: user.avatar).toJsonString();
+    Message msg = await RongIMClient.sendMessage(RCConversationType.Private, targetId, txtMessage);
     Toast.show("消息发送成功");
     LogUtil.log("发送文本消息返回>>$msg");
   }
