@@ -6,6 +6,10 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
@@ -21,6 +25,8 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+project.setProperty('target-platform', 'android-arm')
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -33,21 +39,40 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.byl.wanwan"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        flavorDimensions "22"
+        multiDexEnabled true
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a"
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('keystore/key.jks')
+            keyAlias 'wanwan'
+            storePassword "123456"
+            keyPassword "123456"
+        }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+        }
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
         }
     }
+
 }
 
 flutter {

@@ -59,16 +59,15 @@ class _HomeChildPageState extends State<HomeChildPage>
     return ScrollConfiguration(
       behavior: CustomBehavior(),
       child: SmartRefresher(
-        controller: refreshController,
-        enablePullDown: true,
-        enablePullUp: true,
-        header: RefreshHeader.homeHeader(),
-        footer: RefreshHeader.homeFooter(),
-        onRefresh: onRefresh,
-        onLoading: onLoading,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Expanded(
+          controller: refreshController,
+          enablePullDown: true,
+          enablePullUp: true,
+          header: RefreshHeader.homeHeader(),
+          footer: RefreshHeader.homeFooter(),
+          onRefresh: onRefresh,
+          onLoading: onLoading,
+          child: SingleChildScrollView(
+            controller: scrollController,
             child: Column(
               children: [
                 BannerView(
@@ -99,9 +98,7 @@ class _HomeChildPageState extends State<HomeChildPage>
                     itemCount: news.length),
               ],
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 

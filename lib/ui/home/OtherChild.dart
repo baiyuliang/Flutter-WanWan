@@ -31,22 +31,20 @@ class _OtherChildPageState extends State<OtherChildPage>
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-          padding: const EdgeInsets.all(0),
-          controller: scrollController,
-          itemBuilder: (context, index) {
-            return getItem(index);
-          },
-          itemCount: news.length),
-    );
+    return ListView.builder(
+        padding: const EdgeInsets.all(0),
+        controller: scrollController,
+        itemBuilder: (context, index) {
+          return getItem(index);
+        },
+        itemCount: news.length);
   }
 
   getItem(int index) {
     NewsResultData newsResultData = news[index];
     return InkWell(
       onTap: () {
-        RouteUtil.push(context,  NewsDetailPage(data: newsResultData));
+        RouteUtil.push(context, NewsDetailPage(data: newsResultData));
       },
       child: Column(
         children: [

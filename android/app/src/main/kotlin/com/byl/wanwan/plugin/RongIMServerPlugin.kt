@@ -55,7 +55,6 @@ class RongIMServerPlugin(activity: Activity) : FlutterPlugin, MethodChannel.Meth
                         if (!TextUtils.isEmpty(tokenResult.token)) {
                             map["code"] = 200
                             map["token"] = tokenResult.token
-                            map["error"] = "注册成功"
                             Log.e("RongIMRegPlugin", "注册成功:  $tokenResult")
                         } else {
                             map["code"] = -1
